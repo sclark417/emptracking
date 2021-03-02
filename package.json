@@ -15,5 +15,14 @@
     "express": "^4.17.1",
     "inquirer": "^8.0.0",
     "mysql": "^2.18.1"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sclark417/emptracking.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sclark417/emptracking/issues"
+  },
+  "homepage": "https://github.com/sclark417/emptracking#readme"
 }
