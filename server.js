@@ -139,9 +139,9 @@ const newEmployee = () => {
     roleChoices.push(Object(roles[i]));
   }
 
-  // for (i = 0; i < roles.length; i++) {
-  //   managerChoices.push(Object(roles[i]));
-  // }
+  for (i = 0; i < roles.length; i++) {
+    managerChoices.push(Object(roles[i]));
+  }
 
   inquirer
     .prompt([
