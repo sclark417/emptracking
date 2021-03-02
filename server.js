@@ -8,7 +8,7 @@ var connection = mysql.createConnection({
   user: "root",
 
   //your password here
-  password: "Melissa0723!",
+  password: "",
 
   //make sure to run the schema.sql in workbench
   database: "employer_DB",
