@@ -1,36 +1,42 @@
-DROP DATABASE IF EXISTS employer_DB;
-CREATE database employer_DB;
+DROP DATABASE IF EXISTS business_DB;
 
-USE employer_DB;
+CREATE DATABASE business_DB;
 
+USE business_DB;
 
--- Create the table plans.
 CREATE TABLE department (
-  id int NOT NULL AUTO_INCREMENT,
-  name varchar(30) NOT NULL,
+  id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(30) NOT NULL,
   PRIMARY KEY (id)
 );
 
+INSERT INTO department (name)
+VALUES ("Human Resources");
 
--- Create the table plans.
 CREATE TABLE role (
-  id int NOT NULL AUTO_INCREMENT,
-  title varchar(30) NOT NULL,
-  salary DECIMAL(10,2),
-  department_id int, 
+  id INT NOT NULL AUTO_INCREMENT,
+  title VARCHAR(30) NOT NULL,
+  salary DECIMAL NOT NULL,
+  department_id INTEGER,
   PRIMARY KEY (id),
-  CONSTRAINT department_role FOREIGN KEY (department_id) REFERENCES department(id)
+  FOREIGN KEY (department_id) REFERENCES department(id)
 );
 
--- Create the table plans.
+INSERT INTO role (title, salary, department_id)
+VALUES ("Manager", 60000, 1);
+
 CREATE TABLE employee (
-  id int NOT NULL AUTO_INCREMENT,
-  first_Name varchar(30) NOT NULL,
-  last_name varchar(30) NOT NULL,
-  role_id int,
-  manager_id int,
+  id INT NOT NULL AUTO_INCREMENT,
+  first_name VARCHAR(30) NOT NULL,
+  last_name VARCHAR(30) NOT NULL,
+  role_id INTEGER,
+  department_id INTEGER,
   PRIMARY KEY (id),
-  CONSTRAINT role_identification FOREIGN KEY (role_id) REFERENCES role(id),
-  CONSTRAINT manager_identification FOREIGN KEY (manager_id) REFERENCES employee(id) ON DELETE SET NULL
-  
+  FOREIGN KEY (role_id) REFERENCES role(id),
+  FOREIGN KEY (department_id) REFERENCES department(id)
 );
+
+INSERT INTO employee (first_name, last_name, role_id, department_id)
+VALUES ("Dave", "Doe", 1, 1);
+
+SELECT * FROM role, department;
