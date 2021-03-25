@@ -26,18 +26,18 @@ VALUES('Intern', 5000, 1),
 
 
 INSERT INTO employee (firstName, lastName, role_id)
-VALUES('Billy', 'Bob', 1), 
-('Barry', 'Mcockiner', 2),
-('Larry', 'Early', 3),
-('Joe', 'Shmo', 4),
-('Pierce', 'Gladfelter', 5),
+VALUES('Clark', 'Stephen', 1), 
+('Barry', 'Manilow', 2),
+('Jacob', 'Dolph', 3),
+('Melissa', 'Dorazil', 4),
+('Matt', 'Dizzle', 5),
 ('Henry', 'Mgee', 6),
-('Jonny', 'Willie', 7),
+('Jonny', 'Cash', 7),
 ('Tiger', 'King', 8),
 ('Bobby', 'Shmurda', 9),
 ('Kevin', 'Johnson', 10),  
 ('Billy', 'Mountaintop', 11),
 ('Holy', 'Diver', 12),
-('Jessie', 'Early', 3),
-('Billy', 'Finderbuild', 11);
+('Jess', 'Earl', 3),
+('Billy', 'Bonny', 11);
 
