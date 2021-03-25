@@ -1,193 +1,121 @@
-var express = require("express");
-var mysql = require("mysql");
+const inquirer = require("inquirer");
+const mysql = require("mysql");
+const cTable = require("console.table");
 
-var app = express();
-
-var PORT = process.env.PORT || 8080;
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-var connection = mysql.createConnection({
+const connection = mysql.createConnection({
   host: "localhost",
   port: 3306,
   user: "root",
-  password: "Melissa0723!",
-  database: "employee_db",
+  password: "Andherecometheirish1!",
+  database: "employee_managerDB",
 });
 
-//
-
-connection.connect(function (err) {
-  if (err) {
-    console.error("error connecting: " + err.stack);
-    return;
-  }
+connection.connect((err) => {
+  if (err) throw err;
+  console.log(
+    `You have successfully connected to the internal employee management system, connection id: ${connection.threadId}`
+  );
+  console.log(
+    `------------------------------------------------------------------`
+  );
+  welcome();
 });
 
-var inquirer = require("inquirer");
-
-const allEmployeeView = () => {
-  connection.query(
-    'SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department,CONCAT(manager.first_name," ",manager.last_name) AS manager, role.salary FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id LEFT JOIN employee manager on manager.id = employee.manager_id;',
-    (err, res) => {
-      if (err) throw err;
-      console.table(res);
-    }
-  );
-};
-
-const showEmployeeNames = () => {
-  connection.query(
-    'SELECT CONCAT(first_name," ", last_name) AS Employees FROM employee;',
-    (err, res) => {
-      if (err) throw err;
-      console.table(res);
-      connection.end();
-    }
-  );
-};
-
-const showRolesWithDep = () => {
-  connection.query(
-    "SELECT role.title, role.salary, department.name AS Department_Name FROM role INNER JOIN department ON role.department_id = department.id;",
-    (err, res) => {
-      if (err) throw err;
-      console.table(res);
-      connection.end();
-    }
-  );
-};
-
-const showDep = () => {
-  connection.query("SELECT * FROM department", (err, res) => {
-    if (err) throw err;
-    console.table(res);
-    connection.end();
-  });
-};
-
-const showRoles = () => {
-  connection.query("SELECT title AS Roles FROM role", (err, res) => {
-    if (err) throw err;
-    console.table(res);
-    connection.end();
-  });
-};
-
-const newRole = () => {
+function welcome() {
   inquirer
     .prompt([
-      {
-        type: "input",
-        message: "Please input the new role.",
-        name: "title",
-      },
-      {
-        type: "input",
-        message: "Please input the new role's salary.",
-        name: "salary",
-      },
-      {
-        type: "input",
-        message: "Please input the new role's department id.",
-        name: "department_id",
-      },
-    ])
-    .then((answers) => {
-      connection.query(
-        `INSERT INTO role (title, salary, department_id) values ('${answers.title}','${answers.salary}','${answers.department_id}')`,
-        (err, res) => {
-          if (err) throw err;
-        }
-      );
-    })
-    .catch((error) => {
-      if (error.isTtyError) {
-      }
-    });
-};
-
-const newDep = () => {
-  inquirer
-    .prompt([
-      {
-        type: "input",
-        message: "Please input the new department.",
-        name: "name",
-      },
-    ])
-    .then((answers) => {
-      connection.query(
-        `INSERT INTO department (name) values ('${answers.name}')`,
-        (err, res) => {
-          if (err) throw err;
-        }
-      );
-    })
-    .catch((error) => {
-      if (error.isTtyError) {
-      }
-    });
-};
-
-const newEmployee = () => {
-  let roleChoices = [];
-  let managerChoices = [];
-
-  for (i = 0; i < roles.length; i++) {
-    roleChoices.push(Object(roles[i]));
-  }
-
-  for (i = 0; i < roles.length; i++) {
-    managerChoices.push(Object(roles[i]));
-  }
-
-  inquirer
-    .prompt([
-      {
-        type: "input",
-        message: "Please input employees first name.",
-        name: "first_name",
-      },
-      {
-        type: "input",
-        message: "Please input employees last name.",
-        name: "last_name",
-      },
       {
         type: "list",
-        message: "Please select the role for this employee.",
-        choices: function () {
-          connection.query(
-            `INSERT INTO department (name) values ('${answers.name}')`,
-            (err, res) => {
-              if (err) throw err;
-            }
-          );
-        },
-        name: "name",
-      },
-      {
-        type: "list",
-        message: "Please select the manager for this employee.",
-        name: "name",
+        name: "home",
+        message:
+          "Welcome to the Employee Management System. What would you like to do?",
+        choices: [
+          "Add departments, roles, or employees",
+          "View departments, roles, employees",
+          "Update employee roles",
+          "Exit",
+        ],
       },
     ])
-    .then((answers) => {
-      connection.query(
-        `INSERT INTO department (name) values ('${answers.name}')`,
-        (err, res) => {
-          if (err) throw err;
-        }
-      );
-    })
-    .catch((error) => {
-      if (error.isTtyError) {
+    .then((input) => {
+      switch (input.home) {
+        case "Add departments, roles, or employees":
+          add();
+          break;
+        case "View departments, roles, employees":
+          view();
+          break;
+        case "Update employee roles":
+          updateEmployeeRoles();
+          break;
+        case "Exit":
+          welcome();
+          break;
       }
     });
-};
+}
 
-newEmployee();
-
-app.listen(PORT);
+function add() {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "addHome",
+        message:
+          "Welcome to the Employee Management System. What would you like to do?",
+        choices: ["Add department", "Add role", "Add employee", "Exit"],
+      },
+    ])
+    .then((input) => {
+      switch (input.addHome) {
+        case "Add department":
+          addDept();
+          break;
+        case "Add role":
+          addRole();
+          break;
+        case "Add employee":
+          addEmployee();
+          break;
+      }
+    });
+}
+function addDept() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "name",
+        message:
+          "Welcome to the Employee Management System. What would you like to do?",
+      },
+    ])
+    .then((input) => {
+      var query = `INSERT INTO department (${input.name})`;
+    });
+}
+function addRole() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "addHome",
+        message:
+          "Welcome to the Employee Management System. What would you like to do?",
+      },
+    ])
+    .then((input) => {});
+}
+function add() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "addHome",
+        message:
+          "Welcome to the Employee Management System. What would you like to do?",
+        choices: ["Add department", "Add role", "Add employee", "Exit"],
+      },
+    ])
+    .then((input) => {});
+}
